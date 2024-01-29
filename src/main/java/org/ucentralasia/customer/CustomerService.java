@@ -38,9 +38,9 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Long id) {
-        Customer customer = customerDao.selectCustomerById(id).orElseThrow(
-                () -> new ResourseNotFoundException("Customer with id [%s] doesnt exist.".formatted(id))
-        );
+        if (!customerDao.existsCustomerWithId(id)) {
+            throw new ResourseNotFoundException("Customer with id [%s] not found".formatted(id));
+        }
         customerDao.deleteCustomerById(id);
     }
 
@@ -61,7 +61,7 @@ public class CustomerService {
 
         if (customerUpdateRequest.email() != null && !customerUpdateRequest.email().equals(customer.getEmail())) {
             if (customerDao.existsCustomerWithEmail(customerUpdateRequest.email())) {
-                throw new DublicateResourceException("Customer with email [%s] already exists.".formatted(customerUpdateRequest.email()));
+                throw new DublicateResourceException("email already taken");
             }
             customer.setEmail(customerUpdateRequest.email());
             changes = true;

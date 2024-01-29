@@ -57,13 +57,20 @@ class CustomerJPADataAccessServiceTest {
 
     @Test
     void existsCustomerWithId() {
+        underTest.existsCustomerWithId((long)3);
+        verify(customerRespository).existsCustomerById((long)3);
     }
 
     @Test
     void deleteCustomerById() {
+        underTest.deleteCustomerById((long)3);
+        verify(customerRespository).deleteById(3);
     }
 
     @Test
     void updateCustomer() {
+        Customer customer = new Customer((long) 3,"Firuz", "Azizbekov", 19);
+        underTest.updateCustomer(customer);
+        verify(customerRespository).save(customer);
     }
 }
